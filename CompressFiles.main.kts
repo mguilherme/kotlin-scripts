@@ -21,7 +21,6 @@ fun File.compress(): ByteArrayOutputStream {
     ZipOutputStream(result).use {
         val zipEntry = ZipEntry(this.name)
         it.write(zipEntry, this.readBytes())
-        it.close()
     }
     return result
 }
