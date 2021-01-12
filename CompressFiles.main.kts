@@ -1,4 +1,4 @@
-#!/usr/bin/env kotlin
+#!/usr/bin/env kotlinc -J--add-opens=java.base/java.util=ALL-UNNAMED -script
 @file:CompilerOptions("-jvm-target", "11")
 
 @file:DependsOn("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
