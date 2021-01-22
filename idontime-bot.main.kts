@@ -41,7 +41,7 @@ fun login() = driver.run {
 }
 
 fun add(config: Config) = driver.run {
-    val (date, id) = config
+    val (date, dropdown) = config
 
     navigate().to(movements)
     Thread.sleep(1000)
@@ -57,7 +57,7 @@ fun add(config: Config) = driver.run {
 
     findElement(By.id("ctl00_cphContent_cbTipoMov_B-1Img")).click() // Dropdown
     Thread.sleep(1000)
-    findElement(By.id(id)).click() // (Entrance / Exit) type
+    findElement(By.id(dropdown)).click() // (Entrance / Exit) type
     Thread.sleep(1000)
     findElement(By.id("ctl00_btnGuardar")).click() // Save record
 }
