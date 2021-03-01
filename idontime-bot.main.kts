@@ -5,12 +5,9 @@
 import Idontime_bot_main.Config
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 typealias Config = Pair<String, String>
 
-// Before running the script execute the following commands to run with chromedriver
 // $ brew install chromedriver
 // $ xattr -d com.apple.quarantine $(which chromedriver)
 
@@ -22,15 +19,25 @@ val movements = "$basePath/areas/as/asmovimentos.aspx"
 
 val username = "<USERNAME>"
 val password = "<PASSWORD>"
-val currentDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-val entrance = "$currentDate 09:00" to "ctl00_cphContent_cbTipoMov_DDD_L_LBI3T0"
-val exit = "$currentDate 18:00" to "ctl00_cphContent_cbTipoMov_DDD_L_LBI4T0"
+
+val entrance = "ctl00_cphContent_cbTipoMov_DDD_L_LBI3T0"
+val exit = "ctl00_cphContent_cbTipoMov_DDD_L_LBI4T0"
+
+//val currentDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+
+val dates = listOf("22-02-2021", "23-02-2021", "24-02-2021", "25-02-2021", "26-02-2021")
 
 // Actions
 navigate()
 login()
-add(entrance)
-add(exit)
+
+val test = dates.associateBy(
+    { "$it 09:00" to entrance },
+    { "$it 18:00" to exit }
+).forEach { (entrance, exit) ->
+    add(entrance)
+    add(exit)
+}
 
 fun navigate() = driver.navigate().to(basePath)
 
@@ -41,7 +48,7 @@ fun login() = driver.run {
 }
 
 fun add(config: Config) = driver.run {
-    val (date, dropdown) = config
+    val (date, id) = config
 
     navigate().to(movements)
     Thread.sleep(1000)
@@ -52,12 +59,12 @@ fun add(config: Config) = driver.run {
     // Select Date
     findElement(By.id("ctl00_cphContent_txtData_I")).run {
         clear()
-        sendKeys(date) // (Entrance / Exit) date
+        sendKeys(date) // Entrance
     }
 
     findElement(By.id("ctl00_cphContent_cbTipoMov_B-1Img")).click() // Dropdown
     Thread.sleep(1000)
-    findElement(By.id(dropdown)).click() // (Entrance / Exit) type
+    findElement(By.id(id)).click() // Entrada A
     Thread.sleep(1000)
-    findElement(By.id("ctl00_btnGuardar")).click() // Save record
+    findElement(By.id("ctl00_btnGuardar")).click() // Save
 }
